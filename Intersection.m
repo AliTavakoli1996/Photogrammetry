@@ -1,0 +1,17 @@
+function [XYZ]=Intersection(xp1,yp1,xp2,yp2,f,EOP1,EOP2)
+Rx=[1 0 0;0 cos(EOP1(1)) sin(EOP1(1));0 -sin(EOP1(1)) cos(EOP1(1))];
+Ry=[cos(EOP1(2)) 0 -sin(EOP1(2));0 1 0;sin(EOP1(2)) 0 cos(EOP1(2))];
+Rz=[cos(EOP1(3)) sin(EOP1(3)) 0;-sin(EOP1(3)) cos(EOP1(3)) 0;0 0 1];
+M1=Rx*Ry*Rz;
+Rx=[1 0 0;0 cos(EOP2(1)) sin(EOP2(1));0 -sin(EOP2(1)) cos(EOP2(1))];
+Ry=[cos(EOP2(2)) 0 -sin(EOP2(2));0 1 0;sin(EOP2(2)) 0 cos(EOP2(2))];
+Rz=[cos(EOP2(3)) sin(EOP2(3)) 0;-sin(EOP2(3)) cos(EOP2(3)) 0;0 0 1];
+M2=Rx*Ry*Rz; 
+T1=M1'*[xp1;yp1;-f];
+T2=M2'*[xp2;yp2;-f];
+U=[T1 -T2];
+L=[EOP2(4:6)-EOP1(4:6)];
+Delta=(U'*U)\(U'*L);
+XYZ1=Delta(1)*M1'*[xp1;yp1;-f]+EOP1(4:6);
+XYZ2=Delta(2)*M2'*[xp2;yp2;-f]+EOP2(4:6);
+XYZ=(XYZ1+XYZ2)/2;
